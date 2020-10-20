@@ -1,7 +1,7 @@
-7699b1e3703091bf7112ff2799a9ee52 *DESCRIPTION
+07372f440bba83feaca3cd82bf613b36 *DESCRIPTION
 dae6563fe1383da178fa19376ef155e5 *LICENSE
 34dd3068574c15f7120c12a1950d55fa *NAMESPACE
-7fbd5cafd3a5bd9f394bc5d2d1073988 *NEWS.md
+4e08b6a95e059692de6c55d92ef02baa *NEWS.md
 152b27ab66a04c0780a88a7993eb7b9d *R/RcppExports.R
 1ef1054df4f5cfa610883164d8071dcb *R/akritas.R
 5f01c5cce5df9c901675d9d784d08043 *R/clean_data.R
@@ -19,7 +19,7 @@ fba71cc573c2476f2fafac1ea51f2383 *R/pchazard.R
 6b16d8ad90203b32cc38298c93e2164b *R/survivalmodels-package.R
 174ee30116f7794764cd7b05cb9e9c0f *R/zzz.R
 23bd76692c49c53b0591a09c2de307f0 *README.md
-4b3872d30841c3bab205b1e3feed0826 *build/partial.rdb
+2356f148eaed452980c38ad517d8114a *build/partial.rdb
 67b2f3cc30590455c05a579b6099f21c *man/akritas.Rd
 c3344bf088a84f160a36e1c26aa2aa36 *man/build_keras_net.Rd
 d5198d5de7cc153330d3c1414415220d *man/build_pytorch_net.Rd
@@ -44,7 +44,7 @@ ee3f46a4dde5cd7cc0c3a1d4ba188d42 *man/predict.pycox.Rd
 0b8bc6318dac1d873fea0d539eb0f5f7 *man/requireNamespaces.Rd
 a744e532e134e669e4ff6369e12ce10f *man/simsurvdata.Rd
 9fc0cfeb5f3470ccaeb7932b12ee1951 *man/survivalmodels-package.Rd
-8470135493e031b90813b086e8aa4f4f *src/C_akritas.cpp
+023dfe1610ab7b370a65b264dc08d52e *src/C_akritas.cpp
 8dffff4fd4916d83082e5dc071bb30de *src/RcppExports.cpp
 5f1dcbe4f14e17f274e892d80e1274f7 *tests/testthat.R
 fe57d7eaaf0eaa69e3bed5b84914c1a9 *tests/testthat/helpers.R
