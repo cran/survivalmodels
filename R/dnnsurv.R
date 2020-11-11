@@ -167,10 +167,10 @@ dnnsurv <- function(formula = NULL, data = NULL, reverse = FALSE,
 #' Number of batches before evaluation finished, see [keras::predict.keras.engine.training.Model].
 #' @param callbacks `(list())`\cr
 #' Optional callbacks to apply during prediction.
-#' @param type (`numeric(1)`)\cr
+#' @param type (`character(1)`)\cr
 #' Type of predicted value. Choices are survival probabilities over all time-points in training
-#' data (`"survival"`) or a relative risk ranking (`"risk"`), which is the mean cumulative hazard
-#' function over all time-points, or both (`"all"`).
+#' data (`"survival"`) or a relative risk ranking (`"risk"`), which is the negative mean survival
+#' time so higher rank implies higher risk of event, or both (`"all"`).
 #' @param distr6 `(logical(1))`\cr
 #' If `FALSE` (default) and `type` is `"survival"` or `"all"` returns matrix of survival
 #' probabilities, otherwise returns a [distr6::VectorDistribution()].
@@ -217,6 +217,7 @@ predict.dnnsurv <- function(object, newdata, batch_size = 32L, verbose = 0L,
     apply(pred[, 1:i, drop = FALSE], 1, prod)
   })
   surv <- Reduce(cbind, ypred)
+  colnames(surv) <- object$cutpoints
   stopifnot(nrow(newdata) == nrow(surv))
 
   ret <- list()
@@ -227,7 +228,6 @@ predict.dnnsurv <- function(object, newdata, batch_size = 32L, verbose = 0L,
       if (distr6) {
         warning("'distr6' not installed, returning 'surv' as matrix.") # nocov
       }
-      colnames(surv) <- object$cutpoints
       ret$surv <- surv
     } else {
       # cast to distr6
@@ -243,7 +243,8 @@ predict.dnnsurv <- function(object, newdata, batch_size = 32L, verbose = 0L,
   }
 
   if (type %in% c("risk", "all")) {
-    ret$risk <- rowMeans(-log(surv))
+    ret$risk <- -as.numeric(apply(1 - surv, 1,
+                                function(.x) sum(as.numeric(colnames(surv)) * c(.x[1], diff(.x)))))
   }
 
   if (length(ret) == 1) {
