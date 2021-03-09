@@ -1,6 +1,6 @@
 Package: survivalmodels
 Title: Models for Survival Analysis
-Version: 0.1.6
+Version: 0.1.7
 Authors@R: 
     person(given = "Raphael",
            family = "Sonabend",
@@ -18,8 +18,8 @@ LinkingTo: Rcpp
 Encoding: UTF-8
 RoxygenNote: 7.1.1
 NeedsCompilation: yes
-Packaged: 2021-02-09 11:40:46 UTC; raphael
+Packaged: 2021-03-09 14:20:58 UTC; raphael
 Author: Raphael Sonabend [aut, cre] (<https://orcid.org/0000-0001-9225-4654>)
 Maintainer: Raphael Sonabend <raphael.sonabend.15@ucl.ac.uk>
 Repository: CRAN
-Date/Publication: 2021-02-09 12:10:03 UTC
+Date/Publication: 2021-03-09 15:00:02 UTC
