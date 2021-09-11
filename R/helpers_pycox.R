@@ -4,34 +4,40 @@
 #'
 #' @param x_train `(matrix(1))` \cr Training covariates.
 #' @param y_train `(matrix(1))` \cr Training outcomes.
-#' @param frac `(numeric(1))`\cr Fraction of data to use for validation dataset, default is `0`
-#' and therefore no separate validation dataset.
-#' @param standardize_time `(logical(1))`\cr If `TRUE`, the time outcome to be standardized. For use
-#' with [coxtime].
-#' @param log_duration `(logical(1))`\cr If `TRUE` and `standardize_time` is `TRUE` then time
-#' variable is log transformed.
-#' @param with_mean `(logical(1))`\cr If `TRUE` (default) and `standardize_time` is `TRUE` then time
+#' @param frac `(numeric(1))`\cr Fraction of data to use for validation
+#' dataset, default is `0` and therefore no separate validation dataset.
+#' @param standardize_time `(logical(1))`\cr If `TRUE`, the time outcome to be
+#' standardized. For use with [coxtime].
+#' @param log_duration `(logical(1))`\cr If `TRUE` and `standardize_time` is
+#' `TRUE` then time variable is log transformed.
+#' @param with_mean `(logical(1))`\cr If `TRUE` (default) and
+#' `standardize_time` is `TRUE` then time
 #' variable is centered.
-#' @param with_std `(logical(1))`\cr If `TRUE` (default) and `standardize_time` is `TRUE` then time
+#' @param with_std `(logical(1))`\cr If `TRUE` (default) and `standardize_time`
+#' is `TRUE` then time
 #' variable is scaled to unit variance.
-#' @param discretise `(logical(1))`\cr If `TRUE` then time is discretised. For use with the models
+#' @param discretise `(logical(1))`\cr If `TRUE` then time is discretised. For
+#' use with the models
 #' [deephit], [pchazard], and [loghaz].
-#' @param cuts `(integer(1))`\cr If `discretise` is `TRUE` then determines number of cut-points
-#' for discretisation.
-#' @param cutpoints `(numeric())` \cr Alternative to `cuts` if `discretise` is true, provide
-#' exact cutpoints for discretisation. `cuts` is ignored if `cutpoints` is non-NULL.
-#' @param scheme `(character(1))`\cr Method of discretisation, either `"equidistant"` (default)
-#' or `"quantiles"`. See `reticulate::py_help(pycox$models$LogisticHazard$label_transform)`.
+#' @param cuts `(integer(1))`\cr If `discretise` is `TRUE` then determines
+#' number of cut-points for discretisation.
+#' @param cutpoints `(numeric())` \cr Alternative to `cuts` if `discretise` is
+#' true, provide exact cutpoints for discretisation. `cuts` is ignored if
+#' `cutpoints` is non-NULL.
+#' @param scheme `(character(1))`\cr Method of discretisation, either
+#' `"equidistant"` (default) or `"quantiles"`. See
+#' `reticulate::py_help(pycox$models$LogisticHazard$label_transform)`.
 #' @param cut_min `(integer(1))`\cr Starting duration for discretisation, see
 #' `reticulate::py_help(pycox$models$LogisticHazard$label_transform)`.
 #' @param model `(character(1))`\cr Corresponding pycox model.
 #'
 #' @export
-pycox_prepare_train_data <- function(x_train, y_train, frac = 0, standardize_time = FALSE,
-                              log_duration = FALSE,
+pycox_prepare_train_data <- function(x_train, y_train, frac = 0,
+  standardize_time = FALSE, log_duration = FALSE,
   with_mean = TRUE, with_std = TRUE, discretise = FALSE, cuts = 10L,
   cutpoints = NULL, scheme = c("equidistant", "quantiles"),
-  cut_min = 0L, model = c("coxtime", "deepsurv", "deephit", "loghaz", "pchazard")) {
+  cut_min = 0L,
+  model = c("coxtime", "deepsurv", "deephit", "loghaz", "pchazard")) {
 
   if (!requireNamespace("reticulate", quietly = TRUE)) {
     stop("Package 'reticulate' required but not installed.") # nocov
@@ -84,7 +90,7 @@ pycox_prepare_train_data <- function(x_train, y_train, frac = 0, standardize_tim
       )
     } else {
       if (!is.null(cutpoints)) {
-        cuts <- reticulate::r_to_py(cutpoints) # nocov - testing causes errors due to py storage
+        cuts <- reticulate::r_to_py(cutpoints) # nocov
       } else {
         cuts <- as.integer(cuts)
       }
@@ -118,7 +124,9 @@ pycox_prepare_train_data <- function(x_train, y_train, frac = 0, standardize_tim
       }
     }
 
-    y_train <- reticulate::r_to_py(labtrans$fit_transform(y_train[0], y_train[1]))
+    y_train <- reticulate::r_to_py(
+      labtrans$fit_transform(y_train[0], y_train[1])
+    )
 
     if (model %in% c("coxtime", "deephit")) {
       y_train <- reticulate::tuple(
@@ -179,14 +187,15 @@ pycox_activations <- c(
   "tanh", "tanhshrink", "threshold")
 
 #' @title Get Pytorch Activation Function
-#' @description Helper function to return a class or constructed object for pytorch activation
-#' function from `torch.nn.modules.activation`.
-#' @param activation `(character(1))`\cr Activation function method, see details for list of
-#' implemented methods.
-#' @param construct `(logical(1))`\cr If `TRUE` (default) returns constructed object, otherwise
-#' a class.
+#' @description Helper function to return a class or constructed object for
+#' pytorch activation function from `torch.nn.modules.activation`.
+#' @param activation `(character(1))`\cr Activation function method, see
+#' details for list of implemented methods.
+#' @param construct `(logical(1))`\cr If `TRUE` (default) returns constructed
+#' object, otherwise a class.
 #' @param alpha `(numeric(1))`\cr Passed to `celu` and `elu`.
-#' @param dim `(integer(1))`\cr Passed to `glu`, `logsoftmax`, `softmax`, and `softmin`.
+#' @param dim `(integer(1))`\cr Passed to `glu`, `logsoftmax`, `softmax`, and
+#   `softmin`.
 #' @param lambd `(numeric(1))`\cr Passed to `hardshrink` and `softshrink`.
 #' @param min_val,max_val `(numeric(1))`\cr Passed to `hardtanh`.
 #' @param negative_slope `(numeric(1))`\cr Passed to `leakyrelu`.
@@ -239,7 +248,8 @@ pycox_activations <- c(
 #' }
 #'
 #' @export
-get_pycox_activation <- function(activation = "relu", construct = TRUE, alpha = 1, dim = NULL,
+get_pycox_activation <- function(activation = "relu", construct = TRUE,
+  alpha = 1, dim = NULL,
   lambd = 0.5, min_val = -1, max_val = 1, negative_slope = 0.01,
   num_parameters = 1L, init = 0.25, lower = 1 / 8, upper = 1 / 3,
   beta = 1, threshold = 20, value = 20) {
@@ -265,7 +275,8 @@ get_pycox_activation <- function(activation = "relu", construct = TRUE, alpha = 
       leakyrelu = act$LeakyReLU(negative_slope),
       logsigmoid = act$LogSigmoid(),
       logsoftmax = act$LogSoftmax(as.integer(dim)),
-      prelu = act$PReLU(num_parameters = as.integer(num_parameters), init = init),
+      prelu = act$PReLU(num_parameters = as.integer(num_parameters),
+                        init = init),
       rrelu = act$RReLU(lower, upper),
       relu = act$ReLU(),
       selu = act$SELU(),
@@ -486,11 +497,15 @@ get_pycox_callbacks <- function(early_stopping = FALSE, best_weights = FALSE,
 }
 
 #' @title Install Pycox With Reticulate
-#' @description Installs the python 'pycox' package via reticulate. Note the default for `pip` is changed to `TRUE`.
+#' @description Installs the python 'pycox' package via reticulate.
+#' Note the default for `pip` is changed to `TRUE`.
 #' @param method,conda,pip See [reticulate::py_install].
-#' @param install_torch If `TRUE` installs the dependency `torch` package as well.
+#' @param install_torch If `TRUE` installs the dependency `torch` package as
+#' well.
+#' @param ... Passed to [reticulate::py_install].
 #' @export
-install_pycox <- function(method = "auto", conda = "auto", pip = TRUE, install_torch = FALSE) {
+install_pycox <- function(method = "auto", conda = "auto", pip = TRUE,
+                          install_torch = FALSE, ...) {
   # nocov start
   if (!requireNamespace("reticulate", quietly = TRUE)) {
     stop("Package 'reticulate' required but not installed.") # nocov
@@ -500,12 +515,13 @@ install_pycox <- function(method = "auto", conda = "auto", pip = TRUE, install_t
   if (install_torch) {
     pkg <- c("torch", pkg)
   }
-  reticulate::py_install(pkg, method = method, conda = conda, pip = pip)
+  reticulate::py_install(pkg, method = method, conda = conda, pip = pip, ...)
   # nocov end
 }
 
 #' @title Install Torch With Reticulate
-#' @description Installs the python 'torch' package via reticulate. Note the default for `pip` is changed to `TRUE`.
+#' @description Installs the python 'torch' package via reticulate. Note the
+#' default for `pip` is changed to `TRUE`.
 #' @param method,conda,pip See [reticulate::py_install]
 #' @export
 install_torch <- function(method = "auto", conda = "auto", pip = TRUE) {
@@ -750,7 +766,8 @@ predict.pycox <- function(object, newdata, batch_size = 256L, num_workers = 0L,
     surv <- rbind(surv, 0)
     times <- round(c(times, max(times) + 1e-3), 5)
   }
-  rownames(surv) <- times
+  surv <- t(surv)
+  colnames(surv) <- times
 
   type <- match.arg(type)
   if (type %in% c("survival", "all")) {
@@ -758,31 +775,25 @@ predict.pycox <- function(object, newdata, batch_size = 256L, num_workers = 0L,
       if (distr6) {
         warning("'distr6' not installed, returning 'surv' as matrix.") # nocov
       }
-      ret$surv <- t(surv)
+      ret$surv <- surv
     } else {
       # cast to distr6
-      x <- rep(list(list(cdf = 0)), nrow(newdata))
-      for (i in seq_len(nrow(newdata))) {
-        # fix for infinite hazards - invalidate results for NaNs
-        if (any(is.nan(surv[, i]))) {
-          x[[i]]$cdf <- rep(1, numeric(length(x[[i]]$x))) # nocov - can't force this error
+      cdf <- t(apply(surv, 1, function(x) {
+        if (any(is.nan(x))) {
+          rep(1, ncol(surv))
         } else {
-          # fix rounding error bug
-          x[[i]]$cdf <- sort(round(1 - surv[, i], 6))
+          sort(round(1 - x, 6))
         }
-      }
+      }))
 
-      ret$surv <- distr6::VectorDistribution$new(
-        distribution = "WeightedDiscrete",
-        params = x,
-        shared_params = list(x = round(as.numeric(rownames(surv)), 5)),
-        decorators = c("CoreStatistics", "ExoticStatistics"))
+      ret$surv <- distr6::as.Distribution(cdf, fun = "cdf",
+        decorators = c("CoreStatistics", "ExoticStatistics")
+      )
     }
   }
 
   if (type %in% c("risk", "all")) {
-    ret$risk <- -apply(1 - surv, 2, function(.x) sum(c(.x[1],
-                                                       diff(.x)) * as.numeric(rownames(surv))))
+    ret$risk <- surv_to_risk(1 - surv)
   }
 
   if (length(ret) == 1) {
@@ -804,10 +815,9 @@ predict.pycox <- function(object, newdata, batch_size = 256L, num_workers = 0L,
   torch <- reticulate::import("torch")
   torchtuples <- reticulate::import("torchtuples")
 
-  data <- clean_train_data(formula, data, time_variable, status_variable, x, y, reverse)
+  data <- clean_train_data(formula, data, time_variable, status_variable, x, y,
+                           reverse)
   data$activation <- get_pycox_activation(activation, construct = FALSE)
 
-  data <- c(data, pycox_prepare_train_data(data$x, data$y, frac, ...))
-
-  return(data)
+  c(data, pycox_prepare_train_data(data$x, data$y, frac, ...))
 }

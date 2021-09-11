@@ -1,6 +1,6 @@
 Package: survivalmodels
 Title: Models for Survival Analysis
-Version: 0.1.8
+Version: 0.1.9
 Authors@R: 
     person(given = "Raphael",
            family = "Sonabend",
@@ -12,14 +12,14 @@ License: MIT + file LICENSE
 URL: https://github.com/RaphaelS1/survivalmodels/
 BugReports: https://github.com/RaphaelS1/survivalmodels/issues
 Imports: Rcpp (>= 1.0.5)
-Suggests: distr6 (>= 1.4.7), keras, pseudo, reticulate, survival,
+Suggests: distr6 (>= 1.6.0), keras, pseudo, reticulate, survival,
         testthat
 LinkingTo: Rcpp
 Encoding: UTF-8
 RoxygenNote: 7.1.1
 NeedsCompilation: yes
-Packaged: 2021-04-16 07:58:07 UTC; raphael
+Packaged: 2021-09-10 15:47:52 UTC; raphaelsonabend
 Author: Raphael Sonabend [aut, cre] (<https://orcid.org/0000-0001-9225-4654>)
 Maintainer: Raphael Sonabend <raphaelsonabend@gmail.com>
 Repository: CRAN
-Date/Publication: 2021-04-17 07:10:02 UTC
+Date/Publication: 2021-09-11 23:20:02 UTC

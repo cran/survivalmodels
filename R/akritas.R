@@ -167,22 +167,15 @@ predict.akritas <- function(object, newdata, times = NULL,
       surv <- cbind(1, surv, 0)
       colnames(surv) <- round(c(0, times, max(times) + 1e-2), 6)
 
-      cdf <- apply(surv, 1, function(x) list(cdf = 1 - x))
-      ret$surv <- distr6::VectorDistribution$new(
-        distribution = "WeightedDiscrete",
-        shared_params = list(x = as.numeric(colnames(surv))),
-        params = cdf,
-        decorators = c(
-          "CoreStatistics",
-          "ExoticStatistics"
-        )
+      ret$surv <- distr6::as.Distribution(
+        1 - surv, fun = "cdf",
+        decorators = c("CoreStatistics", "ExoticStatistics")
       )
     }
   }
 
   if (type %in% c("risk", "all")) {
-    ret$risk <- -apply(1 - surv, 1, function(.x) sum(c(.x[1],
-                                                       diff(.x)) * as.numeric(colnames(surv))))
+    ret$risk <- surv_to_risk(1 - surv)
   }
 
   if (length(ret) == 1) {
