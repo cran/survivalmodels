@@ -78,7 +78,7 @@ pycox_prepare_train_data <- function(x_train, y_train, frac = 0,
 
   ret <- list(x_train = x_train, y_train = y_train)
 
-  if (standardize_time || discretise) {
+  if (standardize_time || discretise) { # nocov start
     if (standardize_time) {
       labtrans <- do.call(
         pycox$models$CoxTime$label_transform,
@@ -88,7 +88,7 @@ pycox_prepare_train_data <- function(x_train, y_train, frac = 0,
           with_std = with_std
         )
       )
-    } else {
+    } else { # nocov end
       if (!is.null(cutpoints)) {
         cuts <- reticulate::r_to_py(cutpoints) # nocov
       } else {
@@ -389,7 +389,7 @@ get_pycox_optim <- function(optimizer = "adam", net, rho = 0.9, eps = 1e-8, lr =
       weight_decay),
     rprop = opt$Rprop(params, learning_rate, etas, step_sizes),
     sgd = opt$SGD(params, learning_rate, momentum, weight_decay, dampening, nesterov),
-    sparse_adam = opt$SparseAdam(params, learning_rate, betas, eps)
+    sparse_adam = opt$SparseAdam(params, learning_rate, betas, eps) # nocov
   )
 }
 
@@ -753,21 +753,9 @@ predict.pycox <- function(object, newdata, batch_size = 256L, num_workers = 0L,
     )
   }
 
-  surv <- as.matrix(surv)
+  surv <- fill_na(t(as.matrix(round(surv, 4))))
   ret <- list()
-  stopifnot(nrow(newdata) == ncol(surv))
-
-  times <- as.numeric(rownames(surv))
-  if (!(0 %in% times)) {
-    surv <- rbind(1, surv)
-    times <- round(c(0, times), 5)
-  }
-  if (!all(surv[nrow(surv), ] %in% 0)) {
-    surv <- rbind(surv, 0)
-    times <- round(c(times, max(times) + 1e-3), 5)
-  }
-  surv <- t(surv)
-  colnames(surv) <- times
+  stopifnot(nrow(newdata) == nrow(surv))
 
   type <- match.arg(type)
   if (type %in% c("survival", "all")) {
@@ -777,23 +765,14 @@ predict.pycox <- function(object, newdata, batch_size = 256L, num_workers = 0L,
       }
       ret$surv <- surv
     } else {
-      # cast to distr6
-      cdf <- t(apply(surv, 1, function(x) {
-        if (any(is.nan(x))) {
-          rep(1, ncol(surv))
-        } else {
-          sort(round(1 - x, 6))
-        }
-      }))
-
-      ret$surv <- distr6::as.Distribution(cdf, fun = "cdf",
+      ret$surv <- distr6::as.Distribution(1 - surv, fun = "cdf",
         decorators = c("CoreStatistics", "ExoticStatistics")
       )
     }
   }
 
   if (type %in% c("risk", "all")) {
-    ret$risk <- surv_to_risk(1 - surv)
+    ret$risk <- surv_to_risk(surv)
   }
 
   if (length(ret) == 1) {
@@ -816,7 +795,7 @@ predict.pycox <- function(object, newdata, batch_size = 256L, num_workers = 0L,
   torchtuples <- reticulate::import("torchtuples")
 
   data <- clean_train_data(formula, data, time_variable, status_variable, x, y,
-                           reverse)
+                          reverse)
   data$activation <- get_pycox_activation(activation, construct = FALSE)
 
   c(data, pycox_prepare_train_data(data$x, data$y, frac, ...))

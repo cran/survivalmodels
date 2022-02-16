@@ -4,13 +4,28 @@ setcollapse <- function(x) {
 
 
 surv_to_risk <- function(x) {
-  assert_cdf_matrix(x)
-  -apply(x, 1, function(.x) sum(c(.x[1], diff(.x)) * as.numeric(colnames(x))))
+  assert_surv_matrix(x)
+  cumH <- -log(x)
+  cumH[cumH == Inf] <- 0
+  rowSums(cumH)
 }
 
 
-assert_cdf_matrix <- function(x) {
+assert_surv_matrix <- function(x) {
+  stopifnot(all(x <= 1 & x >= 0))
   stopifnot(!is.null(colnames(x)))
   stopifnot(inherits(x, "matrix"))
-  apply(x, 1, function(.x) stopifnot(identical(order(.x), seq(ncol(x)))))
+  apply(1 - x, 1, function(.x) stopifnot(identical(order(.x), seq(ncol(x)))))
+}
+
+fill_na <- function(x, along = 1) {
+  t(apply(x, along, function(.x) {
+    if (!all(is.na(.x))) {
+      .x[is.na(.x)] <- .x[!is.na(.x)][findInterval(
+        which(is.na(.x)),
+        which(!is.na(.x))
+      )]
+    }
+    .x
+  }))
 }

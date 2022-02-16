@@ -154,8 +154,7 @@ predict.akritas <- function(object, newdata, times = NULL,
   )
 
   colnames(surv) <- round(times, 6)
-  # fix rounding errors
-  # surv <- round(surv, 4)
+  surv <- fill_na(round(surv, 4))
 
   ret <- list()
 
@@ -163,9 +162,7 @@ predict.akritas <- function(object, newdata, times = NULL,
     if (!distr6) {
       ret$surv <- surv
     } else {
-      # ensure distribution not degenerate
-      surv <- cbind(1, surv, 0)
-      colnames(surv) <- round(c(0, times, max(times) + 1e-2), 6)
+
 
       ret$surv <- distr6::as.Distribution(
         1 - surv, fun = "cdf",
@@ -175,7 +172,7 @@ predict.akritas <- function(object, newdata, times = NULL,
   }
 
   if (type %in% c("risk", "all")) {
-    ret$risk <- surv_to_risk(1 - surv)
+    ret$risk <- surv_to_risk(surv)
   }
 
   if (length(ret) == 1) {

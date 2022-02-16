@@ -32,7 +32,7 @@ test_that("predict", {
   expect_is(p$surv, "matrix")
   expect_is(p$risk, "numeric")
   expect_equal(length(p$risk), 50)
-  expect_equal(dim(p$surv), c(50, 7))
+  expect_equal(dim(p$surv), c(50, 5))
 })
 
 test_that("predict distr6", {
@@ -48,6 +48,8 @@ test_that("predict distr6", {
 })
 
 test_that("auto sanity", {
-  sanity_check(model = "dnnsurv",
-               pars = list(early_stopping = TRUE, epochs = 100L, validation_split = 0.3))
+  sanity_check(
+    model = "dnnsurv",
+    pars = list(epochs = 100L, validation_split = 0.3)
+  )
 })
