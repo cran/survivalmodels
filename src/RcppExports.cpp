@@ -11,24 +11,36 @@ Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 #endif
 
 // C_Akritas
-NumericVector C_Akritas(NumericMatrix truth, NumericVector times, NumericVector unique_times, NumericVector FX_train, NumericVector FX_predict, double lambda);
-RcppExport SEXP _survivalmodels_C_Akritas(SEXP truthSEXP, SEXP timesSEXP, SEXP unique_timesSEXP, SEXP FX_trainSEXP, SEXP FX_predictSEXP, SEXP lambdaSEXP) {
+NumericVector C_Akritas(NumericMatrix truth, NumericVector predict_times, NumericVector unique_times, NumericVector FX_train, NumericVector FX_predict, double lambda);
+RcppExport SEXP _survivalmodels_C_Akritas(SEXP truthSEXP, SEXP predict_timesSEXP, SEXP unique_timesSEXP, SEXP FX_trainSEXP, SEXP FX_predictSEXP, SEXP lambdaSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< NumericMatrix >::type truth(truthSEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type times(timesSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type predict_times(predict_timesSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type unique_times(unique_timesSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type FX_train(FX_trainSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type FX_predict(FX_predictSEXP);
     Rcpp::traits::input_parameter< double >::type lambda(lambdaSEXP);
-    rcpp_result_gen = Rcpp::wrap(C_Akritas(truth, times, unique_times, FX_train, FX_predict, lambda));
+    rcpp_result_gen = Rcpp::wrap(C_Akritas(truth, predict_times, unique_times, FX_train, FX_predict, lambda));
+    return rcpp_result_gen;
+END_RCPP
+}
+// C_assert_increasing_surv
+bool C_assert_increasing_surv(NumericMatrix x);
+RcppExport SEXP _survivalmodels_C_assert_increasing_surv(SEXP xSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericMatrix >::type x(xSEXP);
+    rcpp_result_gen = Rcpp::wrap(C_assert_increasing_surv(x));
     return rcpp_result_gen;
 END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
     {"_survivalmodels_C_Akritas", (DL_FUNC) &_survivalmodels_C_Akritas, 6},
+    {"_survivalmodels_C_assert_increasing_surv", (DL_FUNC) &_survivalmodels_C_assert_increasing_surv, 1},
     {NULL, NULL, 0}
 };
 

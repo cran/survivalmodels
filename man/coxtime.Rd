@@ -122,25 +122,11 @@ An object of class \code{survivalmodel}.
 }
 \description{
 Cox-Time fits a neural network based on the Cox PH with
-time-varying effects.
+possibly time-dependent effects.
 }
 \details{
 Implemented from the \code{pycox} Python package via \CRANpkg{reticulate}.
 Calls \code{pycox.models.Coxtime}.
-}
-\examples{
-\donttest{
-if (requireNamespaces("reticulate")) {
-  # all defaults
-  coxtime(data = simsurvdata(50))
-
-  # common parameters
-  coxtime(data = simsurvdata(50), frac = 0.3, activation = "relu",
-    num_nodes = c(4L, 8L, 4L, 2L), dropout = 0.1, early_stopping = TRUE, epochs = 100L,
-    batch_size = 32L)
-}
-}
-
 }
 \references{
 Kvamme, H., Borgan, Ø., & Scheel, I. (2019).

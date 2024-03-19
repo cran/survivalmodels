@@ -51,6 +51,9 @@ object, otherwise a class.}
 
 \item{value}{\code{(numeric(1))}\cr Passed to \code{threshold}.}
 }
+\value{
+No return value.
+}
 \description{
 Helper function to return a class or constructed object for
 pytorch activation function from \code{torch.nn.modules.activation}.
@@ -86,15 +89,4 @@ Implemented methods (with help pages) are
 \item \code{"threshold"} \cr \code{reticulate::py_help(torch$nn$modules$activation$Threshold)}
 }
 }
-\examples{
-\donttest{
-if (requireNamespaces("reticulate")) {
-  #' # returns constructed objects
-  get_pycox_activation(activation = "relu", construct = TRUE)
 
-  # returns class
-  get_pycox_activation(activation = "selu", construct = FALSE)
-}
-}
-
-}

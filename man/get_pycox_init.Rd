@@ -36,6 +36,9 @@ methods.}
 \item{non_linearity}{\code{(character(1))}\cr Passed to \code{kaiming_uniform} and \code{kaiming_normal}, one of
 \code{leaky_relu} (default) and \code{relu}.}
 }
+\value{
+No return value.
+}
 \description{
 Helper function to return a character string with a populated pytorch weight
 initializer method from \code{torch.nn.init}. Used in \link{build_pytorch_net} to define a weighting
@@ -54,13 +57,4 @@ Implemented methods (with help pages) are
 \item \code{"orthogonal"} \cr \code{reticulate::py_help(torch$nn$init$orthogonal_)}
 }
 }
-\examples{
-\donttest{
-if (requireNamespaces("reticulate")) {
-  get_pycox_init(init = "uniform")
 
-  get_pycox_init(init = "kaiming_uniform", a = 0, mode = "fan_out")
-}
-}
-
-}

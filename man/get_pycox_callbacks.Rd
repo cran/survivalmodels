@@ -25,16 +25,10 @@ Passed to \code{torchtuples.callbacks.EarlyStopping}.}
 \item{patience}{\code{(integer(1))}\cr
 Passed to \code{torchtuples.callbacks.EarlyStopping}.}
 }
+\value{
+No return value.
+}
 \description{
 Helper function to return torchtuples callbacks from \code{torchtuples.callbacks}.
 }
-\examples{
-\donttest{
-if (requireNamespaces("reticulate")) {
-  get_pycox_callbacks(early_stopping = TRUE)
 
-  get_pycox_callbacks(best_weights = TRUE)
-}
-}
-
-}
